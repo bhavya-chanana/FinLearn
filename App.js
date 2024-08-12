@@ -1,20 +1,78 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import * as React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import FinDucationScreen from './screens/FinDucationScreen';
+import FinGuruScreen from './screens/FinGuruScreen';
+import FinanceScreen from './screens/FinanceScreen';
+import QuizScreen from './screens/QuizScreen';
+import { Text } from 'react-native';
 
-export default function App() {
+const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
+
+function MyTabs() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Tab.Navigator
+      screenOptions={{
+        tabBarActiveTintColor: '#fff',
+        tabBarInactiveTintColor: '#ddd',
+        tabBarStyle: {
+          backgroundColor: '#3E1656',
+          borderTopLeftRadius: 10,
+          borderTopRightRadius: 10,
+          paddingBottom: 5,
+          paddingTop: 5,
+        },
+        headerShown: false,
+      }}
+    >
+      <Tab.Screen
+        name="FinDucation"
+        component={FinDucationScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Text style={{ color, fontSize: size }}>📖</Text>
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="FinGuru"
+        component={FinGuruScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Text style={{ color, fontSize: size }}>💬</Text>
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Finance"
+        component={FinanceScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <Text style={{ color, fontSize: size }}>💵</Text>
+          ),
+        }}
+      />
+    </Tab.Navigator>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default function App() {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Main">
+        <Stack.Screen
+          name="Main"
+          component={MyTabs}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="QuizScreen"
+          component={QuizScreen}
+          options={{ headerShown: false }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
