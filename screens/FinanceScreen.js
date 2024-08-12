@@ -18,13 +18,30 @@ export default function FinanceScreen() {
     fetchTransactions();
   }, []);
 
+  useEffect(() => {
+    if (transactions.length > 0) {
+      fetchTransactions();
+    }
+  }, [transactions]);
+
   const fetchTransactions = async () => {
     try {
       const response = await fetch('http://10.0.2.2:5000/expenses');
       if (response.ok) {
         const data = await response.json();
-        console.log('Fetched transactions:', data); // Debugging line
-        setTransactions(data);
+        // Log each transaction to see what is fetched
+        data.forEach((transaction, index) => {
+          console.log(`Transaction ${index}: `, transaction);
+        });
+
+        // Ensure dates are parsed correctly and amounts are numbers
+        const parsedTransactions = data.map(transaction => ({
+          ...transaction,
+          date: transaction.date ? new Date(transaction.date) : null,
+          amount: parseFloat(transaction.amount)
+        }));
+
+        setTransactions(parsedTransactions);
       } else {
         console.error('Failed to fetch transactions');
         setTransactions([]);
@@ -53,33 +70,38 @@ export default function FinanceScreen() {
 
   const handleSaveTransaction = async () => {
     try {
-        const response = await fetch('http://10.0.2.2:5000/expenses', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                amount: parseFloat(amount),
-                category,
-                payment_mode: paymentMode,
-                date: date.toISOString(), // Ensure date is properly formatted in ISO 8601
-                description: "", // Add default empty description if necessary
-                tags: [] // Add default empty tags if necessary
-            }),
-        });
+      const formattedDate = new Date(date.toISOString().split('.')[0] + 'Z');
 
-        if (response.ok) {
-            const newTransaction = await response.json();
-            setTransactions([newTransaction, ...transactions]);
-            closeModal(); // Close the modal after saving
-        } else {
-            console.error('Failed to save transaction');
-        }
+      const response = await fetch('http://10.0.2.2:5000/expenses', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          amount: parseFloat(amount),
+          category,
+          payment_mode: paymentMode,
+          date: formattedDate,
+          description: "",
+          tags: []
+        }),
+      });
+
+      if (response.ok) {
+        const newTransaction = await response.json();
+
+        newTransaction.date = new Date(newTransaction.date);
+        newTransaction.amount = parseFloat(newTransaction.amount);
+
+        setTransactions([newTransaction, ...transactions]);
+        closeModal();
+      } else {
+        console.error('Failed to save transaction');
+      }
     } catch (error) {
-        console.error('Error:', error);
-        }
-    };
-
+      console.error('Error:', error);
+    }
+  };
 
   if (loading) {
     return (
@@ -97,7 +119,7 @@ export default function FinanceScreen() {
           <View style={[styles.balanceBox, { backgroundColor: '#FF6347' }]}>
             <Text style={styles.balanceLabel}>Spending</Text>
             <Text style={styles.spendingText}>
-              ₹{transactions && transactions.length > 0 ? transactions.reduce((sum, txn) => sum + parseFloat(txn.amount), 0) : 0}
+              ₹{transactions && transactions.length > 0 ? transactions.reduce((sum, txn) => sum + txn.amount, 0).toFixed(2) : '0.00'}
             </Text>
           </View>
           <View style={[styles.balanceBox, { backgroundColor: '#32CD32' }]}>
@@ -107,26 +129,29 @@ export default function FinanceScreen() {
         </View>
 
         <Text style={styles.subHeaderText}>Recent transactions</Text>
-        {transactions.map((transaction) => (
+        {transactions.map((transaction, index) => (
           <View key={transaction.id} style={styles.transactionItem}>
             <View style={styles.transactionIcon}>
-              <Ionicons name="md-receipt" size={24} color="#6200EE" />
+              <Ionicons name="receipt" size={24} color="#6200EE" />
             </View>
             <View style={styles.transactionDetails}>
-              <Text style={styles.transactionAmount}>₹{transaction.amount}</Text>
+              <Text style={styles.transactionAmount}>
+                {console.log(`Rendering amount for transaction ${index}:`, transaction.amount)}
+                ₹{transaction.amount.toFixed(2)}
+              </Text>
               <Text style={styles.transactionCategory}>{transaction.category}</Text>
             </View>
-            <Text style={styles.transactionDate}>{new Date(transaction.date).toLocaleDateString()}</Text>
+            <Text style={styles.transactionDate}>
+              {transaction.date ? transaction.date.toDateString() : 'Invalid Date'}
+            </Text>
           </View>
         ))}
       </ScrollView>
 
-      {/* Floating Action Button */}
       <TouchableOpacity style={styles.fab} onPress={openModal}>
         <Ionicons name="add" size={24} color="white" />
       </TouchableOpacity>
 
-      {/* Modal for Adding Expense */}
       <Modal
         visible={modalVisible}
         animationType="slide"
@@ -137,7 +162,6 @@ export default function FinanceScreen() {
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Add Expense</Text>
 
-            {/* Date Picker */}
             <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.datePicker}>
               <Text style={styles.datePickerText}>{date.toDateString()}</Text>
             </TouchableOpacity>
@@ -150,18 +174,16 @@ export default function FinanceScreen() {
               />
             )}
 
-            {/* Amount Input */}
             <View style={styles.row}>
               <Text style={styles.label}>Amount</Text>
               <TextInput
                 style={styles.input}
                 keyboardType="numeric"
-                value={amount}
+                value={amount.toString()}
                 onChangeText={setAmount}
               />
             </View>
 
-            {/* Category Picker */}
             <View style={styles.row}>
               <Text style={styles.label}>Category</Text>
               <Picker
@@ -177,7 +199,6 @@ export default function FinanceScreen() {
               </Picker>
             </View>
 
-            {/* Payment Mode Picker */}
             <View style={styles.row}>
               <Text style={styles.label}>Payment Mode</Text>
               <Picker
@@ -192,12 +213,10 @@ export default function FinanceScreen() {
               </Picker>
             </View>
 
-            {/* Save Button */}
             <TouchableOpacity onPress={handleSaveTransaction} style={styles.saveButton}>
               <Text style={styles.saveButtonText}>Save</Text>
             </TouchableOpacity>
 
-            {/* Close Button */}
             <TouchableOpacity onPress={closeModal} style={styles.closeButton}>
               <Text style={styles.closeButtonText}>Cancel</Text>
             </TouchableOpacity>
