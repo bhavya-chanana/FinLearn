@@ -8,7 +8,7 @@ export default function FinDucationScreen() {
   const navigation = useNavigation();
   const [selectedChapter, setSelectedChapter] = useState(null);
   const [completedQuizzes, setCompletedQuizzes] = useState(0);
-  const totalQuizzes = 15; // Total number of quizzes across all chapters
+  const totalQuizzes = 5;
 
   const chapters = [
     {
@@ -44,7 +44,6 @@ export default function FinDucationScreen() {
         { id: 'quiz5', title: 'Quiz 1: Investment Basics' },
       ],
     },
-    // Add more chapters and quizzes as needed
   ];
 
   const handleQuizCompletion = () => {
@@ -64,10 +63,10 @@ export default function FinDucationScreen() {
         </View>
         <Circle
           size={100}
-          progress={progressPercentage / 100} // Progress as a fraction
+          progress={progressPercentage / 100}
           showsText={true}
           textStyle={styles.progressText}
-          color="#6A5ACD"
+          color="#B68D40"
           borderWidth={2}
           thickness={8}
           formatText={() => `${Math.round(progressPercentage)}%`}
@@ -93,13 +92,12 @@ export default function FinDucationScreen() {
           <FlatList
             data={selectedChapterData.quizzes}
             renderItem={({ item }) => (
-            <TouchableOpacity
+              <TouchableOpacity
                 style={styles.quizButton}
-                onPress={() => navigation.navigate('QuizScreen', { quizId: item.id })} // Removed onComplete
-            >
+                onPress={() => navigation.navigate('QuizScreen', { quizId: item.id })}
+              >
                 <Text style={styles.quizButtonText}>{item.title}</Text>
-            </TouchableOpacity>
-              
+              </TouchableOpacity>
             )}
             keyExtractor={(item) => item.id}
           />
@@ -112,7 +110,7 @@ export default function FinDucationScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F8F8F8',
+    backgroundColor: '#0E0B1F',
     padding: 20,
   },
   header: {
@@ -123,25 +121,25 @@ const styles = StyleSheet.create({
   },
   greeting: {
     fontSize: 24,
-    color: '#000',
+    color: '#FFF',
   },
   username: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#000',
+    color: '#FFF',
   },
   progressText: {
     fontSize: 18,
-    color: '#6A5ACD',
+    color: '#B68D40',
   },
   pickerContainer: {
-    backgroundColor: '#fff',
+    backgroundColor: '#1F1B2E',
     borderRadius: 10,
     marginBottom: 20,
   },
   picker: {
     height: 50,
-    color: '#000',
+    color: '#FFF',
   },
   chapterContent: {
     marginTop: 20,
@@ -149,27 +147,27 @@ const styles = StyleSheet.create({
   chapterTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#000',
+    color: '#FFF',
     marginBottom: 5,
   },
   description: {
     fontSize: 16,
-    color: '#666',
+    color: '#B0B0B0',
     marginBottom: 20,
   },
   subtitle: {
     fontSize: 16,
-    color: '#000',
+    color: '#FFF',
     marginBottom: 10,
   },
   quizButton: {
-    backgroundColor: '#6A5ACD',
+    backgroundColor: '#B68D40',
     padding: 15,
     borderRadius: 10,
     marginBottom: 10,
   },
   quizButtonText: {
-    color: '#fff',
+    color: '#FFF',
     fontSize: 16,
     textAlign: 'center',
   },

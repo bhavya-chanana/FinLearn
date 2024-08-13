@@ -15,7 +15,7 @@ export default function FinanceScreen() {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showAllTransactions, setShowAllTransactions] = useState(false); // New state to manage "Show More"
+  const [showAllTransactions, setShowAllTransactions] = useState(false);
 
   useEffect(() => {
     fetchTransactions();
@@ -115,9 +115,9 @@ export default function FinanceScreen() {
       const amount = categorySpending[category];
       const percentage = ((amount / totalSpending) * 100).toFixed(2);
       return {
-        name: `${category} ${percentage}%`, // Category name with percentage
+        name: `${category} ${percentage}%`,
         amount: amount,
-        color: getRandomColor(), // Assign a random color or use a predefined color scheme
+        color: getRandomColor(),
         legendFontColor: '#7F7F7F',
         legendFontSize: 15,
       };
@@ -136,7 +136,7 @@ export default function FinanceScreen() {
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#6200EE" />
+        <ActivityIndicator size="large" color="#B68D40" />
       </View>
     );
   }
@@ -162,7 +162,7 @@ export default function FinanceScreen() {
         {displayedTransactions.map((transaction) => (
           <View key={transaction.id} style={styles.transactionItem}>
             <View style={styles.transactionIcon}>
-              <Ionicons name="receipt" size={24} color="#6200EE" />
+              <Ionicons name="receipt" size={24} color="#B68D40" />
             </View>
             <View style={styles.transactionDetails}>
               <Text style={styles.transactionAmount}>₹{transaction.amount.toFixed(2)}</Text>
@@ -187,11 +187,11 @@ export default function FinanceScreen() {
               width={Dimensions.get('window').width - 40}
               height={220}
               chartConfig={{
-                backgroundColor: '#1cc910',
-                backgroundGradientFrom: '#eff3ff',
-                backgroundGradientTo: '#efefef',
-                color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-                labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                backgroundColor: '#1F1B2E',
+                backgroundGradientFrom: '#1F1B2E',
+                backgroundGradientTo: '#1F1B2E',
+                color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
                 style: {
                   borderRadius: 16,
                 },
@@ -204,7 +204,7 @@ export default function FinanceScreen() {
               accessor={'amount'}
               backgroundColor={'transparent'}
               paddingLeft={'15'}
-              absolute // Shows the percentage inside the pie chart
+              absolute
             />
           </>
         )}
@@ -292,7 +292,7 @@ export default function FinanceScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#0E0B1F',
   },
   loadingContainer: {
     flex: 1,
@@ -305,7 +305,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 24,
-    color: '#000000',
+    color: '#FFF',
     marginBottom: 20,
   },
   balanceContainer: {
@@ -322,20 +322,20 @@ const styles = StyleSheet.create({
   },
   balanceLabel: {
     fontSize: 16,
-    color: '#000000',
+    color: '#FFF',
     marginBottom: 5,
   },
   spendingText: {
-    color: '#FFFFFF',
+    color: '#FFF',
     fontSize: 20,
   },
   incomeText: {
-    color: '#FFFFFF',
+    color: '#FFF',
     fontSize: 20,
   },
   subHeaderText: {
     fontSize: 20,
-    color: '#000000',
+    color: '#FFF',
     marginBottom: 10,
   },
   transactionItem: {
@@ -343,7 +343,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 15,
     borderRadius: 10,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#1F1B2E',
     marginBottom: 10,
   },
   transactionIcon: {
@@ -354,29 +354,29 @@ const styles = StyleSheet.create({
   },
   transactionAmount: {
     fontSize: 16,
-    color: '#000000',
+    color: '#FFF',
   },
   transactionCategory: {
     fontSize: 14,
-    color: '#666666',
+    color: '#B0B0B0',
   },
   transactionDate: {
     fontSize: 14,
-    color: '#666666',
+    color: '#B0B0B0',
   },
   showMoreButton: {
     marginVertical: 15,
     alignItems: 'center',
   },
   showMoreText: {
-    color: '#6200EE',
+    color: '#B68D40',
     fontSize: 16,
   },
   fab: {
     position: 'absolute',
     right: 20,
     bottom: 30,
-    backgroundColor: '#6200EE',
+    backgroundColor: '#B68D40',
     width: 60,
     height: 60,
     borderRadius: 30,
@@ -393,12 +393,12 @@ const styles = StyleSheet.create({
   modalContent: {
     width: '90%',
     padding: 20,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#1F1B2E',
     borderRadius: 10,
   },
   modalTitle: {
     fontSize: 18,
-    color: '#000000',
+    color: '#FFF',
     marginBottom: 20,
   },
   row: {
@@ -409,39 +409,43 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    color: '#333333',
+    color: '#B0B0B0',
   },
   input: {
     borderWidth: 1,
-    borderColor: '#CCCCCC',
+    borderColor: '#333',
     padding: 10,
     borderRadius: 5,
     flex: 1,
+    color: '#FFF',
+    backgroundColor: '#333',
   },
   picker: {
     height: 50,
     width: 150,
+    color: '#FFF',
+    backgroundColor: '#333',
   },
   datePicker: {
     marginBottom: 20,
     padding: 10,
     borderWidth: 1,
-    borderColor: '#CCCCCC',
+    borderColor: '#333',
     borderRadius: 5,
   },
   datePickerText: {
     fontSize: 16,
-    color: '#333333',
+    color: '#FFF',
   },
   saveButton: {
     marginTop: 20,
-    backgroundColor: '#6200EE',
+    backgroundColor: '#B68D40',
     padding: 10,
     borderRadius: 5,
     alignItems: 'center',
   },
   saveButtonText: {
-    color: '#FFFFFF',
+    color: '#FFF',
     fontSize: 16,
   },
   closeButton: {
@@ -452,7 +456,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   closeButtonText: {
-    color: '#FFFFFF',
+    color: '#FFF',
     fontSize: 16,
   },
 });

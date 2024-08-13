@@ -8,10 +8,10 @@ import FinanceScreen from './screens/FinanceScreen';
 import QuizScreen from './screens/QuizScreen';
 import AddTransactionScreen from './screens/AddTransactionScreen'; // Import the AddTransactionScreen
 import { Text } from 'react-native';
+import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
-
 function MyTabs() {
   return (
     <Tab.Navigator
@@ -19,13 +19,18 @@ function MyTabs() {
         tabBarActiveTintColor: '#fff',
         tabBarInactiveTintColor: '#ddd',
         tabBarStyle: {
-          backgroundColor: '#3E1656',
+          backgroundColor: '#1F1B2E',
           borderTopLeftRadius: 10,
           borderTopRightRadius: 10,
-          paddingBottom: 5,
-          paddingTop: 5,
+          paddingBottom: 10, // Increase padding
+          paddingTop: 10, // Increase padding
+          height: 70, // Adjust height of the navbar
         },
         headerShown: false,
+        tabBarLabelStyle: {
+          fontSize: 14, // Increase the size of the label text
+          paddingBottom: 5, // Add padding to the label
+        },
       }}
     >
       <Tab.Screen
@@ -33,7 +38,7 @@ function MyTabs() {
         component={FinDucationScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <Text style={{ color, fontSize: size }}>📖</Text>
+            <FontAwesome name="book" size={size + 4} color={color} /> // Increase icon size
           ),
         }}
       />
@@ -42,7 +47,7 @@ function MyTabs() {
         component={FinGuruScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <Text style={{ color, fontSize: size }}>💬</Text>
+            <MaterialCommunityIcons name="chat-question" size={size + 4} color={color} /> // Increase icon size
           ),
         }}
       />
@@ -51,7 +56,7 @@ function MyTabs() {
         component={FinanceScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <Text style={{ color, fontSize: size }}>💵</Text>
+            <FontAwesome name="rupee" size={size + 4} color={color} /> // Increase icon size
           ),
         }}
       />
@@ -75,13 +80,13 @@ export default function App() {
         />
         <Stack.Screen
           name="AddTransaction"
-          component={AddTransactionScreen} // Add the AddTransactionScreen here
+          component={AddTransactionScreen}
           options={{
-            title: 'Add Transaction', // Set a title for the screen
+            title: 'Add Transaction',
             headerStyle: {
-              backgroundColor: '#3E1656', // Match the header color to the app theme
+              backgroundColor: '#1F1B2E',
             },
-            headerTintColor: '#fff', // Set the header text color to white
+            headerTintColor: '#fff',
           }}
         />
       </Stack.Navigator>

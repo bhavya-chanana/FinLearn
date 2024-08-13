@@ -6,7 +6,7 @@ import { Picker } from '@react-native-picker/picker';
 export default function AddTransactionScreen({ navigation }) {
   const [amount, setAmount] = useState('');
   const [category, setCategory] = useState('Others');
-  const [paymentMode, setPaymentMode] = useState('cash'); // Default value as per the backend's check constraint
+  const [paymentMode, setPaymentMode] = useState('cash');
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
 
@@ -18,7 +18,7 @@ export default function AddTransactionScreen({ navigation }) {
 
   const handleAddTransaction = async () => {
     try {
-      const response = await fetch('http://10.0.2.2:5000/expenses', { // Use your backend's correct URL and port
+      const response = await fetch('http://10.0.2.2:5000/expenses', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -27,14 +27,14 @@ export default function AddTransactionScreen({ navigation }) {
           amount: parseFloat(amount),
           category,
           payment_mode: paymentMode,
-          date: date.toISOString(), // Ensure date is properly formatted
+          date: date.toISOString(),
         }),
       });
 
       if (response.ok) {
         const data = await response.json();
         console.log('Transaction Added:', data);
-        navigation.goBack(); // Go back to the Finance screen
+        navigation.goBack();
       } else {
         const errorData = await response.json();
         console.error('Failed to add transaction:', errorData);
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#0E0B1F',
   },
   row: {
     flexDirection: 'row',
@@ -122,32 +122,36 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    color: '#333333',
+    color: '#FFF',
   },
   value: {
     fontSize: 16,
-    color: '#333333',
+    color: '#FFF',
   },
   input: {
     borderWidth: 1,
-    borderColor: '#CCCCCC',
+    borderColor: '#333',
     padding: 10,
     borderRadius: 5,
     flex: 1,
+    color: '#FFF',
+    backgroundColor: '#1F1B2E',
   },
   picker: {
     height: 50,
     width: 150,
+    color: '#FFF',
+    backgroundColor: '#1F1B2E',
   },
   addButton: {
     marginTop: 20,
     padding: 15,
-    backgroundColor: '#6200EE',
+    backgroundColor: '#B68D40',
     borderRadius: 5,
     alignItems: 'center',
   },
   addButtonText: {
-    color: '#FFFFFF',
+    color: '#FFF',
     fontSize: 16,
   },
 });

@@ -132,9 +132,9 @@ export default function QuizScreen() {
         navigation.goBack();
       }
 
-      setSelectedOption(null); // Reset selection for the next question
+      setSelectedOption(null);
       setShowAnswerFeedback(false);
-    }, 1000); // 1-second delay for feedback
+    }, 1000);
   };
 
   return (
@@ -189,7 +189,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
-    backgroundColor: '#F8F8F8',
+    backgroundColor: '#0E0B1F',
   },
   scoreContainer: {
     position: 'absolute',
@@ -199,29 +199,29 @@ const styles = StyleSheet.create({
   scoreText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#FFF',
   },
   questionText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#FFF',
     marginBottom: 20,
     textAlign: 'center',
   },
   optionButton: {
-    backgroundColor: '#6A5ACD',
+    backgroundColor: '#B68D40',
     padding: 15,
     borderRadius: 10,
     marginBottom: 10,
   },
   optionText: {
-    color: '#fff',
+    color: '#FFF',
     fontSize: 16,
     textAlign: 'center',
   },
   completedText: {
     fontSize: 24,
-    color: '#6A5ACD',
+    color: '#B68D40',
     fontWeight: 'bold',
     textAlign: 'center',
   },
