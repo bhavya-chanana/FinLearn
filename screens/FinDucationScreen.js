@@ -28,7 +28,23 @@ export default function FinDucationScreen() {
         { id: 'quiz3', title: 'Quiz 2: Managing Finances in College' },
       ],
     },
-    // Add more chapters as needed
+    {
+      id: 'chapter3',
+      title: 'Chapter 3: Emergency Funds',
+      description: 'Understand the importance of emergency funds and how to build them.',
+      quizzes: [
+        { id: 'quiz4', title: 'Quiz 1: Building an Emergency Fund' },
+      ],
+    },
+    {
+      id: 'chapter4',
+      title: 'Chapter 4: Introduction to Investing',
+      description: 'Learn the basics of investing and different types of investments.',
+      quizzes: [
+        { id: 'quiz5', title: 'Quiz 1: Investment Basics' },
+      ],
+    },
+    // Add more chapters and quizzes as needed
   ];
 
   const handleQuizCompletion = () => {
@@ -77,12 +93,13 @@ export default function FinDucationScreen() {
           <FlatList
             data={selectedChapterData.quizzes}
             renderItem={({ item }) => (
-              <TouchableOpacity
+            <TouchableOpacity
                 style={styles.quizButton}
-                onPress={() => navigation.navigate('QuizScreen', { quizId: item.id, onComplete: handleQuizCompletion })}
-              >
+                onPress={() => navigation.navigate('QuizScreen', { quizId: item.id })} // Removed onComplete
+            >
                 <Text style={styles.quizButtonText}>{item.title}</Text>
-              </TouchableOpacity>
+            </TouchableOpacity>
+              
             )}
             keyExtractor={(item) => item.id}
           />
