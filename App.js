@@ -6,6 +6,7 @@ import FinDucationScreen from './screens/FinDucationScreen';
 import FinGuruScreen from './screens/FinGuruScreen';
 import FinanceScreen from './screens/FinanceScreen';
 import QuizScreen from './screens/QuizScreen';
+import AddTransactionScreen from './screens/AddTransactionScreen'; // Import the AddTransactionScreen
 import { Text } from 'react-native';
 
 const Tab = createBottomTabNavigator();
@@ -71,6 +72,17 @@ export default function App() {
           name="QuizScreen"
           component={QuizScreen}
           options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="AddTransaction"
+          component={AddTransactionScreen} // Add the AddTransactionScreen here
+          options={{
+            title: 'Add Transaction', // Set a title for the screen
+            headerStyle: {
+              backgroundColor: '#3E1656', // Match the header color to the app theme
+            },
+            headerTintColor: '#fff', // Set the header text color to white
+          }}
         />
       </Stack.Navigator>
     </NavigationContainer>

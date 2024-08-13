@@ -1,34 +1,49 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TextInput, Button, ScrollView } from 'react-native';
+import axios from 'axios';
 
-export default function FinGuruScreen() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Welcome to FinGuru</Text>
-      <Text style={styles.description}>
-        Here you can find financial advice, tips, and answers to your questions.
-      </Text>
-    </View>
-  );
-}
+const FinGuru = () => {
+    const [message, setMessage] = useState('');
+    const [conversation, setConversation] = useState([]);
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F8F8F8',
-    padding: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 20,
-  },
-  description: {
-    fontSize: 16,
-    color: '#666',
-    textAlign: 'center',
-  },
-});
+    const sendMessage = async () => {
+        try {
+            const response = await axios.post('http://10.0.2.2:5000/chat', { message });
+            const chatbotResponse = response.data.response;
+
+            setConversation([...conversation, { role: 'user', content: message }, { role: 'bot', content: chatbotResponse }]);
+            setMessage('');
+        } catch (error) {
+            console.error('Error communicating with chatbot:', error);
+        }
+    };
+
+    return (
+        <View style={{ padding: 20, flex: 1 }}>
+            <ScrollView style={{ flex: 1, marginBottom: 20 }}>
+                {conversation.map((msg, index) => (
+                    <View key={index} style={{ marginBottom: 10 }}>
+                        <Text style={{ fontWeight: msg.role === 'user' ? 'bold' : 'normal' }}>
+                            {msg.role === 'user' ? 'You:' : 'FinGuru:'} {msg.content}
+                        </Text>
+                    </View>
+                ))}
+            </ScrollView>
+            <TextInput
+                value={message}
+                onChangeText={setMessage}
+                placeholder="Type your message"
+                style={{
+                    height: 40,
+                    borderColor: 'gray',
+                    borderWidth: 1,
+                    marginBottom: 10,
+                    paddingLeft: 8,
+                }}
+            />
+            <Button title="Send" onPress={sendMessage} />
+        </View>
+    );
+};
+
+export default FinGuru;
