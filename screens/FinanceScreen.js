@@ -13,34 +13,22 @@ export default function FinanceScreen() {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showAllTransactions, setShowAllTransactions] = useState(false); // New state to manage "Show More"
 
   useEffect(() => {
     fetchTransactions();
   }, []);
-
-  useEffect(() => {
-    if (transactions.length > 0) {
-      fetchTransactions();
-    }
-  }, [transactions]);
 
   const fetchTransactions = async () => {
     try {
       const response = await fetch('http://10.0.2.2:5000/expenses');
       if (response.ok) {
         const data = await response.json();
-        // Log each transaction to see what is fetched
-        data.forEach((transaction, index) => {
-          console.log(`Transaction ${index}: `, transaction);
-        });
-
-        // Ensure dates are parsed correctly and amounts are numbers
         const parsedTransactions = data.map(transaction => ({
           ...transaction,
           date: transaction.date ? new Date(transaction.date) : null,
           amount: parseFloat(transaction.amount)
         }));
-
         setTransactions(parsedTransactions);
       } else {
         console.error('Failed to fetch transactions');
@@ -103,6 +91,12 @@ export default function FinanceScreen() {
     }
   };
 
+  const toggleShowAllTransactions = () => {
+    setShowAllTransactions(!showAllTransactions);
+  };
+
+  const displayedTransactions = showAllTransactions ? transactions : transactions.slice(0, 5);
+
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -129,16 +123,13 @@ export default function FinanceScreen() {
         </View>
 
         <Text style={styles.subHeaderText}>Recent transactions</Text>
-        {transactions.map((transaction, index) => (
+        {displayedTransactions.map((transaction) => (
           <View key={transaction.id} style={styles.transactionItem}>
             <View style={styles.transactionIcon}>
               <Ionicons name="receipt" size={24} color="#6200EE" />
             </View>
             <View style={styles.transactionDetails}>
-              <Text style={styles.transactionAmount}>
-                {console.log(`Rendering amount for transaction ${index}:`, transaction.amount)}
-                ₹{transaction.amount.toFixed(2)}
-              </Text>
+              <Text style={styles.transactionAmount}>₹{transaction.amount.toFixed(2)}</Text>
               <Text style={styles.transactionCategory}>{transaction.category}</Text>
             </View>
             <Text style={styles.transactionDate}>
@@ -146,6 +137,14 @@ export default function FinanceScreen() {
             </Text>
           </View>
         ))}
+
+        {transactions.length > 5 && (
+          <TouchableOpacity onPress={toggleShowAllTransactions} style={styles.showMoreButton}>
+            <Text style={styles.showMoreText}>
+              {showAllTransactions ? 'Show Less' : 'Show More'}
+            </Text>
+          </TouchableOpacity>
+        )}
       </ScrollView>
 
       <TouchableOpacity style={styles.fab} onPress={openModal}>
@@ -301,6 +300,14 @@ const styles = StyleSheet.create({
   transactionDate: {
     fontSize: 14,
     color: '#666666',
+  },
+  showMoreButton: {
+    marginVertical: 15,
+    alignItems: 'center',
+  },
+  showMoreText: {
+    color: '#6200EE',
+    fontSize: 16,
   },
   fab: {
     position: 'absolute',
