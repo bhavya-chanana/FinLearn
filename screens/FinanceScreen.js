@@ -3,6 +3,8 @@ import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Modal, TextInput,
 import { Ionicons } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { PieChart } from 'react-native-chart-kit';
+import { Dimensions } from 'react-native';
 
 export default function FinanceScreen() {
   const [modalVisible, setModalVisible] = useState(false);
@@ -97,6 +99,40 @@ export default function FinanceScreen() {
 
   const displayedTransactions = showAllTransactions ? transactions : transactions.slice(0, 5);
 
+  const getCategoryWiseSpending = () => {
+    const totalSpending = transactions.reduce((acc, transaction) => acc + transaction.amount, 0);
+
+    const categorySpending = transactions.reduce((acc, transaction) => {
+      const { category, amount } = transaction;
+      if (!acc[category]) {
+        acc[category] = 0;
+      }
+      acc[category] += amount;
+      return acc;
+    }, {});
+
+    return Object.keys(categorySpending).map(category => {
+      const amount = categorySpending[category];
+      const percentage = ((amount / totalSpending) * 100).toFixed(2);
+      return {
+        name: `${category} ${percentage}%`, // Category name with percentage
+        amount: amount,
+        color: getRandomColor(), // Assign a random color or use a predefined color scheme
+        legendFontColor: '#7F7F7F',
+        legendFontSize: 15,
+      };
+    });
+  };
+
+  const getRandomColor = () => {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  };
+
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -139,11 +175,38 @@ export default function FinanceScreen() {
         ))}
 
         {transactions.length > 5 && (
-          <TouchableOpacity onPress={toggleShowAllTransactions} style={styles.showMoreButton}>
-            <Text style={styles.showMoreText}>
-              {showAllTransactions ? 'Show Less' : 'Show More'}
-            </Text>
-          </TouchableOpacity>
+          <>
+            <TouchableOpacity onPress={toggleShowAllTransactions} style={styles.showMoreButton}>
+              <Text style={styles.showMoreText}>
+                {showAllTransactions ? 'Show Less' : 'Show More'}
+              </Text>
+            </TouchableOpacity>
+
+            <PieChart
+              data={getCategoryWiseSpending()}
+              width={Dimensions.get('window').width - 40}
+              height={220}
+              chartConfig={{
+                backgroundColor: '#1cc910',
+                backgroundGradientFrom: '#eff3ff',
+                backgroundGradientTo: '#efefef',
+                color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                style: {
+                  borderRadius: 16,
+                },
+                propsForDots: {
+                  r: '6',
+                  strokeWidth: '2',
+                  stroke: '#ffa726',
+                },
+              }}
+              accessor={'amount'}
+              backgroundColor={'transparent'}
+              paddingLeft={'15'}
+              absolute // Shows the percentage inside the pie chart
+            />
+          </>
         )}
       </ScrollView>
 
