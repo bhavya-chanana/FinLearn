@@ -3,7 +3,7 @@ import { View, Text, TextInput, Button, ScrollView } from 'react-native';
 import axios from 'axios';
 
 const FinGuru = () => {
-    const [message, setMessage] = useState('');gi
+    const [message, setMessage] = useState('');
     const [conversation, setConversation] = useState([]);
 
     const sendMessage = async () => {
